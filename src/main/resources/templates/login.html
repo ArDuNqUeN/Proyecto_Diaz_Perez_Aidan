@@ -132,21 +132,23 @@
     </div>
   </div>
 
-  <script>
-    function login() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
-      const errorMsg = document.getElementById("errorMsg");
+ <script>
+  function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const errorMsg = document.getElementById("errorMsg");
 
-      // Simulación simple
-      if (email === "admin@test.com" && password === "1234") {
-        alert("Login correcto ✅");
-        errorMsg.style.display = "none";
-      } else {
-        errorMsg.style.display = "block";
-      }
+    if (email === "admin@test.com" && password === "1234") {
+      errorMsg.style.display = "none";
+
+      // 👉 IR A EMPRESAS
+      window.location.href = "/empresas";
+
+    } else {
+      errorMsg.style.display = "block";
     }
-  </script>
+  }
+</script>
 
 </body>
 </html>
