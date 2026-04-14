@@ -36,5 +36,15 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/2dawv08/.m2/repository/org/springframework/spring-web/6.2.14/spring-web-6.2.14.jar" sourcepath="C:/Users/2dawv08/.m2/repository/org/springframework/spring-web/6.2.14/spring-web-6.2.14-sources.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="maven.groupId" value="org.springframework"/>
+			<attribute name="maven.artifactId" value="spring-web"/>
+			<attribute name="maven.version" value="6.2.14"/>
+			<attribute name="maven.scope" value="compile"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="/PruebaSpringDataJPA"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

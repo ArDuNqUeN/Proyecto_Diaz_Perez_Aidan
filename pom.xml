@@ -4,4 +4,11 @@
   <artifactId>Proyecto_Diaz_Perez_Aidan</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>Proyecto_Diaz_Perez_Aidan</name>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.example</groupId>
+  		<artifactId>PruebaSpringDataJPA</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>
