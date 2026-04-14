@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - App Profesional</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f3f2ef;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      width: 100%;
+      max-width: 380px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: #0a66c2;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .input-group label {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .input-group input:focus {
+      border-color: #0a66c2;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #0a66c2;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background-color: #004182;
+    }
+
+    .extra {
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .extra a {
+      color: #0a66c2;
+      text-decoration: none;
+    }
+
+    .extra a:hover {
+      text-decoration: underline;
+    }
+
+    .error {
+      color: red;
+      font-size: 13px;
+      margin-bottom: 10px;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <div class="logo">MiRed</div>
+    <h2>Iniciar sesión</h2>
+
+    <div class="error" id="errorMsg">Credenciales incorrectas</div>
+
+    <div class="input-group">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="ejemplo@email.com">
+    </div>
+
+    <div class="input-group">
+      <label>Contraseña</label>
+      <input type="password" id="password" placeholder="********">
+    </div>
+
+    <button class="btn" onclick="login()">Entrar</button>
+
+    <div class="extra">
+      <p><a href="#">¿Olvidaste tu contraseña?</a></p>
+      <p>¿No tienes cuenta? <a href="#">Regístrate</a></p>
+    </div>
+  </div>
+
+  <script>
+    function login() {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const errorMsg = document.getElementById("errorMsg");
+
+      // Simulación simple
+      if (email === "admin@test.com" && password === "1234") {
+        alert("Login correcto ✅");
+        errorMsg.style.display = "none";
+      } else {
+        errorMsg.style.display = "block";
+      }
+    }
+  </script>
+
+</body>
+</html>
