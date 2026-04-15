@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Inicio - Mi App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      /* 👉 Puedes cambiar esto por una imagen */
+      background: #0a66c2;
+      /* Ejemplo con imagen:
+      background: url('tu-imagen.jpg') no-repeat center center/cover;
+      */
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      text-align: center;
+    }
+
+    h1 {
+      color: #0a66c2;
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #555;
+      margin-bottom: 25px;
+      font-size: 16px;
+    }
+
+    .btn {
+      position: relative;
+      padding: 12px 25px;
+      border-radius: 30px;
+      border: 2px solid #0a66c2;
+      background: white;
+      color: #0a66c2;
+      font-size: 16px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: color 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      display: inline-block;
+  text-decoration: none;
+    }
+
+    /* capa de animación */
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background: #0a66c2;
+      z-index: 0;
+      transition: width 0.35s ease;
+    }
+
+    .btn:hover::before {
+      width: 100%;
+    }
+
+    .btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn:hover {
+      color: white;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Bienvenido a nuestra plataforma</h1>
+    <p>Gestiona tu experiencia de forma profesional, rápida y sencilla desde un solo lugar.</p>
+
+    <a href="/login" class="btn">
+  <span>Comenzar</span>
+</a>
+  </div>
+
+</body>
+</html>
