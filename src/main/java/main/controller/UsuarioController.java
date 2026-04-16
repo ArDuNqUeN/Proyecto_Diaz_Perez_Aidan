@@ -2,11 +2,7 @@ package main.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.*;
 import main.model.Usuario;
 import main.repository.UsuarioRepository;
 
@@ -23,13 +19,13 @@ public class UsuarioController {
     @GetMapping
     public String listar(Model model) {
         model.addAttribute("usuarios", repo.findAll());
-        return "usuarios/list";
+        return "/usuarios/list";
     }
 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         model.addAttribute("usuario", new Usuario());
-        return "usuarios/form";
+        return "/usuarios/form";
     }
 
     @PostMapping

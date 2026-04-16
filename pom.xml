@@ -22,37 +22,62 @@
 
     <dependencies>
 
-        <!-- WEB (Spring MVC) -->
+        <!-- 🌐 WEB (Spring MVC / REST) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- THYMELEAF (HTML) -->
+        <!-- 🎨 THYMELEAF (vistas HTML) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-        <!-- JPA (Base de datos) -->
+        <!-- 🗄️ JPA (ORM / Base de datos) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- H2 DATABASE (memoria) -->
+        <!-- 🧪 H2 DATABASE (en memoria) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
 
+        <!-- 🧰 LOMBOK (opcional pero MUY útil) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 🔄 DEVTOOLS (auto-reload en desarrollo) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        
+        <dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>org.thymeleaf.extras</groupId>
+    <artifactId>thymeleaf-extras-springsecurity6</artifactId>
+</dependency>
+
     </dependencies>
 
     <build>
         <plugins>
 
-            <!-- Spring Boot plugin -->
+            <!-- 🚀 Plugin Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
