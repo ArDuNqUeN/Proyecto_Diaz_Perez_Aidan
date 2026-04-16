@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Login - App Profesional</title>
+  <title>Login - PracticApps</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -109,7 +109,7 @@
 <body>
 
   <div class="container">
-    <div class="logo">MiRed</div>
+    <div class="logo">PracticApps</div>
     <h2>Iniciar sesión</h2>
 
     <div class="error" id="errorMsg">Credenciales incorrectas</div>
@@ -138,11 +138,12 @@
       const password = document.getElementById("password").value;
       const errorMsg = document.getElementById("errorMsg");
 
-      // Simulación simple
+      // Simulación simple de login
       if (email === "admin@test.com" && password === "1234") {
-        alert("Login correcto ✅");
-        errorMsg.style.display = "none";
+        // Redirige a la página "/trabajando" si las credenciales son correctas
+        window.location.href = "/trabajando"; // Redirección con JavaScript
       } else {
+        // Muestra un mensaje de error si las credenciales son incorrectas
         errorMsg.style.display = "block";
       }
     }

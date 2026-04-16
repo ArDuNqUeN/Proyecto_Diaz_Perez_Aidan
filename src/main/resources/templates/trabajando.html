@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Inicio - PractiApps</title>
+  <title>Próximamente - PractiApps</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -19,7 +19,6 @@
       justify-content: center;
       align-items: center;
       background: linear-gradient(135deg, #0a66c2, #00bcd4);
-      /* Gradiente dinámico */
     }
 
     .container {
@@ -99,6 +98,36 @@
       margin-bottom: 20px;
     }
 
+    .coming-soon {
+      margin-top: 40px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #0a66c2;
+    }
+
+    .description {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .roadmap {
+      font-size: 14px;
+      color: #333;
+      margin-top: 20px;
+      list-style-type: none;
+    }
+
+    .roadmap li {
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .roadmap li::before {
+      content: "→ ";
+      color: #0a66c2;
+    }
   </style>
 </head>
 
@@ -106,11 +135,23 @@
 
   <div class="container">
     <img src="/img/logo.png" alt="PracticApps logo" class="logo">
-    <h1>Bienvenido a PractiApps</h1>
-    <p>Gestiona tu experiencia de forma profesional, rápida y sencilla desde un solo lugar.</p>
+    <h1>¡Gracias por probar nuestra demo!</h1>
+    <p class="description">Has llegado al final de nuestra demostración. Algunas funcionalidades y mejoras estarán disponibles próximamente.</p>
 
-    <a href="/login" class="btn">
-      <span>Comenzar</span>
+    <div class="coming-soon">
+      <p>Próximamente:</p>
+      <ul class="roadmap">
+        <li>Integración con múltiples plataformas</li>
+        <li>Automatización de procesos</li>
+        <li>Reportes detallados de rendimiento</li>
+        <li>Y mucho más...</li>
+      </ul>
+    </div>
+
+    <p>Te invitamos a seguirnos para más actualizaciones.</p>
+
+    <a href="/" class="btn">
+      <span>Volver al inicio</span>
     </a>
   </div>
 
