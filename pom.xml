@@ -22,39 +22,39 @@
 
     <dependencies>
 
-        <!-- 🌐 WEB (Spring MVC / REST) -->
+        <!--  WEB (Spring MVC / REST) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- 🎨 THYMELEAF (vistas HTML) -->
+        <!--  THYMELEAF (vistas HTML) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
-        <!-- 🗄️ JPA (ORM / Base de datos) -->
+        <!--  JPA (ORM / Base de datos) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- 🧪 H2 DATABASE (en memoria) -->
+        <!-- H2 DATABASE (en memoria) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- 🧰 LOMBOK (opcional pero MUY útil) -->
+        <!--  LOMBOK (opcional pero MUY útil) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- 🔄 DEVTOOLS (auto-reload en desarrollo) -->
+        <!--  DEVTOOLS (auto-reload en desarrollo) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -77,7 +77,7 @@
     <build>
         <plugins>
 
-            <!-- 🚀 Plugin Spring Boot -->
+            <!--  Plugin Spring Boot -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

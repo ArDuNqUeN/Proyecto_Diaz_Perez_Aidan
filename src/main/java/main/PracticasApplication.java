@@ -18,7 +18,7 @@ public class PracticasApplication {
     public CommandLineRunner init(UsuarioRepository repo) {
         return args -> {
 
-            // 👇 ADMIN
+            // ADMIN
             Usuario admin = new Usuario();
             admin.setNombre("Admin");
             admin.setEmail("admin@admin.com");
@@ -27,7 +27,7 @@ public class PracticasApplication {
 
             repo.save(admin);
 
-            // 👇 ALUMNO
+            // ALUMNO
             Usuario alumno = new Usuario();
             alumno.setNombre("Alumno");
             alumno.setEmail("alumno@alumno.com");
