@@ -1,5 +1,4 @@
 package main;
-
 import main.model.Usuario;
 import main.repository.UsuarioRepository;
 import org.springframework.boot.CommandLineRunner;

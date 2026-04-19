@@ -1,2 +1,144 @@
-<h1>Panel Alumno</h1>
-<p>Solo alumnos</p>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panel Alumno - PractiApps</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0a66c2, #00bcd4);
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 40px;
+      width: 100%;
+      max-width: 480px;
+      border-radius: 16px;
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .container:hover {
+      transform: translateY(-10px);
+    }
+
+    h1 {
+      color: #0a66c2;
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    .role {
+      font-size: 14px;
+      color: #00bcd4;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    p {
+      color: #555;
+      font-size: 17px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      position: relative;
+      padding: 14px 30px;
+      border-radius: 30px;
+      border: 2px solid #0a66c2;
+      background: #0a66c2;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      display: inline-block;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background: #fff;
+      z-index: 0;
+      transition: width 0.4s ease;
+    }
+
+    .btn:hover::before {
+      width: 100%;
+    }
+
+    .btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn:hover {
+      background: white;
+      color: #0a66c2;
+    }
+
+    .logo {
+      max-width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #e3f2fd;
+      color: #0a66c2;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <img src="/img/logo.png" alt="PractiApps logo" class="logo">
+
+    <div class="badge">Área privada</div>
+    <h1>Panel de Alumno</h1>
+    <div class="role">Acceso exclusivo para alumnos</div>
+
+    <p>
+      Este espacio estará dedicado a la gestión de tus prácticas, seguimiento y recursos personalizados.
+    </p>
+
+    <p>
+      🚧 Actualmente estamos trabajando en esta sección para ofrecerte la mejor experiencia posible.
+    </p>
+
+    <a href="/index" class="btn">
+      <span>Volver al inicio</span>
+    </a>
+  </div>
+
+</body>
+</html>
