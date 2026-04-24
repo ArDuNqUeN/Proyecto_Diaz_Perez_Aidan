@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Tutor Empresa - PracticApps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <span class="logo">PracticApps</span>
+        <div class="nav-links">
+            <a th:href="@{/panel/tutor-empresa}">Mi Panel</a>
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn-logout">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>🏢 Panel de Tutor de Empresa</h2>
+            <p>Bienvenido, <strong th:text="${tutor.nombreCompleto}">Roberto</strong></p>
+            <p>Empresa: <strong th:text="${empresa.nombre}">Tech Solutions S.L.</strong></p>
+            <p>Cargo: <strong th:text="${tutor.cargo}">Supervisor</strong></p>
+
+            <h3>📝 Evaluaciones realizadas</h3>
+            <table class="tabla" th:if="${!#lists.isEmpty(evaluaciones)}">
+                <thead>
+                    <tr>
+                        <th>Alumno</th>
+                        <th>Nota</th>
+                        <th>Comentario</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="eval : ${evaluaciones}">
+                        <td th:text="${eval.alumno.nombreCompleto}">Carlos García</td>
+                        <td th:text="${eval.nota}">8.5</td>
+                        <td th:text="${eval.comentario}">Buen trabajo</td>
+                        <td th:text="${#temporals.format(eval.fechaEvaluacion, 'dd/MM/yyyy')}">15/03/2026</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="aviso" th:if="${#lists.isEmpty(evaluaciones)}">No has realizado evaluaciones todavía.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 PracticApps - Todos los derechos reservados</p>
+    </footer>
+
+</body>
+</html>

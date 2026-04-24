@@ -1,123 +1,37 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Login - PracticApps</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      background-color: #f3f2ef;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .container {
-      background: white;
-      padding: 30px;
-      width: 100%;
-      max-width: 380px;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
-      color: #0a66c2;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    .input-group {
-      margin-bottom: 15px;
-      text-align: left;
-    }
-
-    .input-group label {
-      font-size: 14px;
-      color: #555;
-    }
-
-    .input-group input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      outline: none;
-    }
-
-    .input-group input:focus {
-      border-color: #0a66c2;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 10px;
-      background-color: #0a66c2;
-      color: white;
-      border: none;
-      border-radius: 25px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .btn:hover {
-      background-color: #004182;
-    }
-
-    .error {
-      color: red;
-      font-size: 13px;
-      margin-bottom: 10px;
-    }
-  </style>
+  <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 
-<body>
+<body class="centrado">
 
-  <div class="container">
+  <div class="card centrada">
     <div class="logo">PracticApps</div>
     <h2>Iniciar sesión</h2>
 
-    <!-- ERROR SI FALLA LOGIN -->
-    <div th:if="${param.error}" class="error">
+    <div th:if="${param.error}" class="alerta alerta-error">
       Credenciales incorrectas
     </div>
 
- <form method="post" action="/login">
+    <form method="post" action="/login">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
-  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="text" name="username" placeholder="ejemplo@email.com">
+      </div>
 
-  <div class="input-group">
-    <label>Email</label>
-    <input type="text" name="username" placeholder="ejemplo@email.com">
-  </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" name="password" placeholder="****">
+      </div>
 
-  <div class="input-group">
-    <label>Contraseña</label>
-    <input type="password" name="password" placeholder="****">
-  </div>
-
-  <button class="btn" type="submit">Entrar</button>
-
-</form>
-
+      <button class="btn btn-block" type="submit">Entrar</button>
+    </form>
   </div>
 
 </body>
