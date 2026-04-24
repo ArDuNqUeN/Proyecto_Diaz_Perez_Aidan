@@ -1,12 +1,13 @@
 package main.config;
 
-import main.model.Usuario;
-import main.repository.UsuarioRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import main.model.Usuario;
+import main.repository.UsuarioRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -20,11 +21,9 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Usuario u = repo.findAll()
-                .stream()
-                .filter(user -> user.getEmail().equals(email))
-                .findFirst()
-                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+    	// ✅ Esto consulta directamente por email en la BD
+    	Usuario u = repo.findByEmail(email)
+    	        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
 
         return User.builder()
                 .username(u.getEmail())
