@@ -12,6 +12,7 @@
         <span class="logo">PracticApps</span>
         <div class="nav-links">
             <a th:href="@{/panel/tutor-empresa}">Mi Panel</a>
+            <a th:href="@{/panel/tutor-empresa/validar-horas}">Validar Horas</a>
             <form th:action="@{/logout}" method="post" class="logout-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit" class="btn-logout">Cerrar Sesión</button>
@@ -25,6 +26,48 @@
             <p>Bienvenido, <strong th:text="${tutor.nombreCompleto}">Roberto</strong></p>
             <p>Empresa: <strong th:text="${empresa.nombre}">Tech Solutions S.L.</strong></p>
             <p>Cargo: <strong th:text="${tutor.cargo}">Supervisor</strong></p>
+
+            <!-- Estadísticas rápidas -->
+            <div class="stats">
+                <div class="stat-card">
+                    <h3 th:text="${#lists.size(practicas)}">0</h3>
+                    <p>Prácticas supervisadas</p>
+                </div>
+                <div class="stat-card">
+                    <h3 th:text="${horasPendientes}">0</h3>
+                    <p>Horas pendientes de validar</p>
+                </div>
+            </div>
+
+            <!-- Botón para validar horas -->
+            <div class="botones mt-20">
+                <a th:href="@{/panel/tutor-empresa/validar-horas}" class="btn">
+                    <span>⏱️ Validar Horas Pendientes</span>
+                </a>
+            </div>
+
+            <h3>📋 Prácticas que supervisas</h3>
+            <table class="tabla" th:if="${!#lists.isEmpty(practicas)}">
+                <thead>
+                    <tr>
+                        <th>Alumno</th>
+                        <th>Título</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Horas Previstas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="practica : ${practicas}">
+                        <td th:text="${practica.alumno.nombreCompleto}">Carlos</td>
+                        <td th:text="${practica.titulo}">Desarrollo Web</td>
+                        <td th:text="${practica.fechaInicio}">2026-01-15</td>
+                        <td th:text="${practica.fechaFin}">2026-06-15</td>
+                        <td th:text="${practica.horasPrevistas}">400</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="aviso" th:if="${#lists.isEmpty(practicas)}">No tienes prácticas asignadas actualmente.</p>
 
             <h3>📝 Evaluaciones realizadas</h3>
             <table class="tabla" th:if="${!#lists.isEmpty(evaluaciones)}">

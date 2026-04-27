@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Validar Horas - PracticApps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+
+    <nav class="navbar">
+        <span class="logo">PracticApps</span>
+        <div class="nav-links">
+            <a th:href="@{/panel/tutor-empresa}">Mi Panel</a>
+            <a th:href="@{/panel/tutor-empresa/validar-horas}">Validar Horas</a>
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn-logout">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>⏱️ Validar Horas de Alumnos</h2>
+
+            <!-- Mensajes flash -->
+            <div th:if="${mensaje}" class="alerta alerta-info" th:text="${mensaje}"></div>
+            <div th:if="${error}" class="alerta alerta-error" th:text="${error}"></div>
+
+            <h3>📋 Pendientes de validación</h3>
+            <table class="tabla" th:if="${!#lists.isEmpty(registrosPendientes)}">
+                <thead>
+                    <tr>
+                        <th>Alumno</th>
+                        <th>Fecha</th>
+                        <th>Horas</th>
+                        <th>Descripción</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="registro : ${registrosPendientes}">
+                        <td th:text="${registro.alumno.nombreCompleto}">Carlos</td>
+                        <td th:text="${registro.fecha}">2026-04-21</td>
+                        <td th:text="${registro.horas}">8</td>
+                        <td th:text="${registro.descripcion}">Tareas</td>
+                        <td>
+                            <form th:action="@{/panel/tutor-empresa/validar/{id}(id=${registro.id})}" 
+                                  method="post" style="display: inline;">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-verde btn-pequeno">✅ Validar</button>
+                            </form>
+                            <form th:action="@{/panel/tutor-empresa/rechazar/{id}(id=${registro.id})}" 
+                                  method="post" style="display: inline;">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-rojo btn-pequeno">❌ Rechazar</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="aviso" th:if="${#lists.isEmpty(registrosPendientes)}">
+                ✅ No hay horas pendientes de validación.
+            </p>
+
+            <h3>📜 Historial de registros</h3>
+            <table class="tabla" th:if="${!#lists.isEmpty(historial)}">
+                <thead>
+                    <tr>
+                        <th>Alumno</th>
+                        <th>Fecha</th>
+                        <th>Horas</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="registro : ${historial}">
+                        <td th:text="${registro.alumno.nombreCompleto}">Carlos</td>
+                        <td th:text="${registro.fecha}">2026-04-21</td>
+                        <td th:text="${registro.horas}">8</td>
+                        <td th:text="${registro.descripcion}">Tareas</td>
+                        <td>
+                            <span th:if="${registro.estado.toString() == 'VALIDADA'}" style="color: green;">✅ Validada</span>
+                            <span th:if="${registro.estado.toString() == 'RECHAZADA'}" style="color: red;">❌ Rechazada</span>
+                            <span th:if="${registro.estado.toString() == 'PENDIENTE'}" style="color: orange;">⏳ Pendiente</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 PracticApps</p>
+    </footer>
+
+</body>
+</html>

@@ -26,17 +26,25 @@ public class SecurityConfig {
 
         http
             .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/", "/index", "/usuarios", "/login","/css/**", "/img/**", "/js/**").permitAll()                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/usuarios/nuevo").hasRole("ADMIN")
+                // Rutas públicas (acceso sin login)
+                .requestMatchers("/", "/index", "/login", "/css/**", "/img/**", "/js/**").permitAll()
+                
+                // Rutas por rol - Fíjate que coinciden con tus @RequestMapping
+                .requestMatchers("/panel/admin/**").hasRole("ADMIN")
+                .requestMatchers("/panel/alumno/**").hasRole("ALUMNO")
+                .requestMatchers("/panel/tutor-empresa/**").hasRole("TUTOR_EMPRESA")
+                .requestMatchers("/panel/tutor-centro/**").hasRole("TUTOR_CENTRO")
+                
+                // El resto requiere estar autenticado
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
                 .loginPage("/login")
-                .successHandler(loginSuccessHandler)
+                .successHandler(loginSuccessHandler)  // Tu manejador personalizado
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutSuccessUrl("/login")
+                .logoutSuccessUrl("/login?logout")
             );
 
         return http.build();

@@ -3,6 +3,7 @@ package main.config;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
@@ -17,18 +18,18 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             HttpServletResponse response,
             Authentication authentication) throws IOException {
 
-        authentication.getAuthorities().forEach(auth -> {
-            try {
-                if (auth.getAuthority().equals("ROLE_ADMIN")) {
-                    response.sendRedirect("/admin/dashboard");
-                } else if (auth.getAuthority().equals("ROLE_ALUMNO")) {
-                    response.sendRedirect("/alumno/home");
-                } else {
-                    response.sendRedirect("/login");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+        // Comparamos con las authorities que tiene el usuario autenticado
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            response.sendRedirect("/panel/admin");
+        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ALUMNO"))) {
+            response.sendRedirect("/panel/alumno");
+        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_TUTOR_EMPRESA"))) {
+            response.sendRedirect("/panel/tutor-empresa");
+        } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_TUTOR_CENTRO"))) {
+            response.sendRedirect("/panel/tutor-centro");
+        } else {
+            // Si no coincide ningún rol, lo mandamos al login con error
+            response.sendRedirect("/login?error");
+        }
     }
 }

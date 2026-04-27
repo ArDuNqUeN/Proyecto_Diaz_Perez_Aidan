@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import main.model.*;
 import main.repository.*;
 
+import java.time.LocalDate;
+
 @Component
 public class DataInitializer implements CommandLineRunner {
 
@@ -18,6 +20,8 @@ public class DataInitializer implements CommandLineRunner {
     private final TutorEmpresaRepository tutorEmpresaRepository;
     private final TutorCentroRepository tutorCentroRepository;
     private final EmpresaRepository empresaRepository;
+    private final PracticaRepository practicaRepository;
+    private final RegistroHorasRepository registroHorasRepository;
 
     public DataInitializer(UsuarioRepository usuarioRepository, 
                           PasswordEncoder passwordEncoder,
@@ -25,7 +29,9 @@ public class DataInitializer implements CommandLineRunner {
                           AdministradorRepository administradorRepository,
                           TutorEmpresaRepository tutorEmpresaRepository,
                           TutorCentroRepository tutorCentroRepository,
-                          EmpresaRepository empresaRepository) {
+                          EmpresaRepository empresaRepository,
+                          PracticaRepository practicaRepository,
+                          RegistroHorasRepository registroHorasRepository) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.alumnoRepository = alumnoRepository;
@@ -33,6 +39,8 @@ public class DataInitializer implements CommandLineRunner {
         this.tutorEmpresaRepository = tutorEmpresaRepository;
         this.tutorCentroRepository = tutorCentroRepository;
         this.empresaRepository = empresaRepository;
+        this.practicaRepository = practicaRepository;
+        this.registroHorasRepository = registroHorasRepository;
     }
 
     @Override
@@ -41,7 +49,6 @@ public class DataInitializer implements CommandLineRunner {
 
         // ========== 1. CREAR USUARIO ADMINISTRADOR ==========
         if (usuarioRepository.findByEmail("admin@test.com").isEmpty()) {
-            // Crear el Usuario base
             Usuario usuarioAdmin = new Usuario();
             usuarioAdmin.setNombre("Administrador Principal");
             usuarioAdmin.setEmail("admin@test.com");
@@ -50,7 +57,6 @@ public class DataInitializer implements CommandLineRunner {
             usuarioAdmin.setActivo(true);
             usuarioAdmin = usuarioRepository.save(usuarioAdmin);
 
-            // Crear el perfil de Administrador vinculado
             Administrador admin = new Administrador();
             admin.setUsuario(usuarioAdmin);
             admin.setDepartamento("Informática");
@@ -59,7 +65,8 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("✅ Administrador creado: admin@test.com / admin123");
         }
 
-        // ========== 2. CREAR USUARIO ALUMNO ==========
+        // ========== 2. CREAR USUARIO ALUMNO 1 ==========
+        Alumno alumno1 = null;
         if (usuarioRepository.findByEmail("alumno@test.com").isEmpty()) {
             Usuario usuarioAlumno = new Usuario();
             usuarioAlumno.setNombre("Carlos");
@@ -69,17 +76,21 @@ public class DataInitializer implements CommandLineRunner {
             usuarioAlumno.setActivo(true);
             usuarioAlumno = usuarioRepository.save(usuarioAlumno);
 
-            Alumno alumno = new Alumno();
-            alumno.setUsuario(usuarioAlumno);
-            alumno.setMatricula("A2024001");
-            alumno.setApellidos("García López");
-            alumno.setTelefono("612345678");
-            alumnoRepository.save(alumno);
+            alumno1 = new Alumno();
+            alumno1.setUsuario(usuarioAlumno);
+            alumno1.setMatricula("A2024001");
+            alumno1.setApellidos("García López");
+            alumno1.setTelefono("612345678");
+            alumno1 = alumnoRepository.save(alumno1);
 
             System.out.println("✅ Alumno creado: alumno@test.com / alumno123");
+        } else {
+            alumno1 = alumnoRepository.findByUsuario(
+                usuarioRepository.findByEmail("alumno@test.com").get()
+            ).orElse(null);
         }
 
-        // ========== 3. CREAR USUARIO ALUMNO 2 (para pruebas) ==========
+        // ========== 3. CREAR USUARIO ALUMNO 2 ==========
         if (usuarioRepository.findByEmail("maria@test.com").isEmpty()) {
             Usuario usuarioAlumno2 = new Usuario();
             usuarioAlumno2.setNombre("María");
@@ -114,6 +125,7 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // ========== 5. CREAR TUTOR DE EMPRESA ==========
+        TutorEmpresa tutorEmpresa = null;
         if (usuarioRepository.findByEmail("tutor.empresa@test.com").isEmpty()) {
             Usuario usuarioTutorEmpresa = new Usuario();
             usuarioTutorEmpresa.setNombre("Roberto");
@@ -123,19 +135,22 @@ public class DataInitializer implements CommandLineRunner {
             usuarioTutorEmpresa.setActivo(true);
             usuarioTutorEmpresa = usuarioRepository.save(usuarioTutorEmpresa);
 
-            TutorEmpresa tutorEmpresa = new TutorEmpresa();
+            tutorEmpresa = new TutorEmpresa();
             tutorEmpresa.setUsuario(usuarioTutorEmpresa);
             tutorEmpresa.setCargo("Supervisor de Desarrollo");
             tutorEmpresa.setTelefono("611222333");
-            if (empresa != null) {
-                tutorEmpresa.setEmpresa(empresa);
-            }
-            tutorEmpresaRepository.save(tutorEmpresa);
+            tutorEmpresa.setEmpresa(empresa);
+            tutorEmpresa = tutorEmpresaRepository.save(tutorEmpresa);
 
             System.out.println("✅ Tutor Empresa creado: tutor.empresa@test.com / tutor123");
+        } else {
+            tutorEmpresa = tutorEmpresaRepository.findByUsuario(
+                usuarioRepository.findByEmail("tutor.empresa@test.com").get()
+            ).orElse(null);
         }
 
         // ========== 6. CREAR TUTOR DE CENTRO ==========
+        TutorCentro tutorCentro = null;
         if (usuarioRepository.findByEmail("tutor.centro@test.com").isEmpty()) {
             Usuario usuarioTutorCentro = new Usuario();
             usuarioTutorCentro.setNombre("Laura");
@@ -145,13 +160,67 @@ public class DataInitializer implements CommandLineRunner {
             usuarioTutorCentro.setActivo(true);
             usuarioTutorCentro = usuarioRepository.save(usuarioTutorCentro);
 
-            TutorCentro tutorCentro = new TutorCentro();
+            tutorCentro = new TutorCentro();
             tutorCentro.setUsuario(usuarioTutorCentro);
             tutorCentro.setDepartamento("Desarrollo de Aplicaciones Web");
             tutorCentro.setDespacho("A-204");
-            tutorCentroRepository.save(tutorCentro);
+            tutorCentro = tutorCentroRepository.save(tutorCentro);
 
             System.out.println("✅ Tutor Centro creado: tutor.centro@test.com / tutor123");
+        } else {
+            tutorCentro = tutorCentroRepository.findByUsuario(
+                usuarioRepository.findByEmail("tutor.centro@test.com").get()
+            ).orElse(null);
+        }
+
+        // ========== 7. CREAR PRÁCTICA DE PRUEBA ==========
+        if (practicaRepository.count() == 0 && alumno1 != null && empresa != null 
+            && tutorEmpresa != null && tutorCentro != null) {
+            
+            Practica practica = new Practica();
+            practica.setTitulo("Desarrollo Web Full Stack");
+            practica.setDescripcion("Prácticas de desarrollo web con Spring Boot y Angular en el departamento de tecnología.");
+            practica.setFechaInicio(LocalDate.of(2026, 1, 15));
+            practica.setFechaFin(LocalDate.of(2026, 6, 15));
+            practica.setHorasPrevistas(400);
+            practica.setEstado(EstadoPractica.ACTIVA);
+            practica.setAlumno(alumno1);
+            practica.setEmpresa(empresa);
+            practica.setTutorEmpresa(tutorEmpresa);
+            practica.setTutorCentro(tutorCentro);
+            practica = practicaRepository.save(practica);
+            
+            System.out.println("✅ Práctica creada: " + practica.getTitulo());
+
+            // ========== 8. CREAR REGISTROS DE HORAS DE PRUEBA ==========
+            RegistroHoras registro1 = new RegistroHoras();
+            registro1.setFecha(LocalDate.of(2026, 4, 20));
+            registro1.setHoras(8);
+            registro1.setDescripcion("Configuración del entorno de desarrollo y primera toma de contacto con el equipo.");
+            registro1.setEstado(EstadoRegistro.VALIDADA);
+            registro1.setAlumno(alumno1);
+            registro1.setPractica(practica);
+            registroHorasRepository.save(registro1);
+
+            RegistroHoras registro2 = new RegistroHoras();
+            registro2.setFecha(LocalDate.of(2026, 4, 21));
+            registro2.setHoras(7);
+            registro2.setDescripcion("Desarrollo de API REST con Spring Boot. Implementación de endpoints CRUD.");
+            registro2.setEstado(EstadoRegistro.PENDIENTE);
+            registro2.setAlumno(alumno1);
+            registro2.setPractica(practica);
+            registroHorasRepository.save(registro2);
+
+            RegistroHoras registro3 = new RegistroHoras();
+            registro3.setFecha(LocalDate.of(2026, 4, 22));
+            registro3.setHoras(8);
+            registro3.setDescripcion("Pruebas unitarias con JUnit y Mockito. Corrección de errores.");
+            registro3.setEstado(EstadoRegistro.PENDIENTE);
+            registro3.setAlumno(alumno1);
+            registro3.setPractica(practica);
+            registroHorasRepository.save(registro3);
+
+            System.out.println("✅ 3 registros de horas creados para el alumno");
         }
 
         System.out.println("🎉 Datos iniciales cargados correctamente.");
