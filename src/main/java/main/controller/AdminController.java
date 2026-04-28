@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,19 +23,25 @@ public class AdminController {
     private final TutorEmpresaRepository tutorEmpresaRepository;
     private final TutorCentroRepository tutorCentroRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmpresaRepository empresaRepository;
+    private final PracticaRepository practicaRepository;
 
     public AdminController(UsuarioRepository usuarioRepository,
                           AlumnoRepository alumnoRepository,
                           AdministradorRepository administradorRepository,
                           TutorEmpresaRepository tutorEmpresaRepository,
                           TutorCentroRepository tutorCentroRepository,
-                          PasswordEncoder passwordEncoder) {
+                          PasswordEncoder passwordEncoder,
+                          EmpresaRepository empresaRepository,
+                          PracticaRepository practicaRepository) {
         this.usuarioRepository = usuarioRepository;
         this.alumnoRepository = alumnoRepository;
         this.administradorRepository = administradorRepository;
         this.tutorEmpresaRepository = tutorEmpresaRepository;
         this.tutorCentroRepository = tutorCentroRepository;
         this.passwordEncoder = passwordEncoder;
+        this.empresaRepository = empresaRepository;
+        this.practicaRepository = practicaRepository;
     }
 
     // ========== PANEL PRINCIPAL ==========
@@ -66,13 +73,11 @@ public class AdminController {
                                  @RequestParam(required = false) String despacho,
                                  RedirectAttributes redirectAttributes) {
 
-        // Verificar si el email ya existe
         if (usuarioRepository.findByEmail(email).isPresent()) {
             redirectAttributes.addFlashAttribute("error", "❌ El email ya está registrado.");
             return "redirect:/panel/admin/usuarios/nuevo";
         }
 
-        // Crear el usuario base
         Usuario usuario = new Usuario();
         usuario.setNombre(nombre);
         usuario.setEmail(email);
@@ -81,7 +86,6 @@ public class AdminController {
         usuario.setActivo(true);
         usuario = usuarioRepository.save(usuario);
 
-        // Crear el perfil según el rol
         switch (rol) {
             case "ROLE_ALUMNO":
                 Alumno alumno = new Alumno();
@@ -91,7 +95,6 @@ public class AdminController {
                 alumno.setTelefono(telefono);
                 alumnoRepository.save(alumno);
                 break;
-
             case "ROLE_TUTOR_EMPRESA":
                 TutorEmpresa tutorEmpresa = new TutorEmpresa();
                 tutorEmpresa.setUsuario(usuario);
@@ -99,7 +102,6 @@ public class AdminController {
                 tutorEmpresa.setTelefono(telefono);
                 tutorEmpresaRepository.save(tutorEmpresa);
                 break;
-
             case "ROLE_TUTOR_CENTRO":
                 TutorCentro tutorCentro = new TutorCentro();
                 tutorCentro.setUsuario(usuario);
@@ -107,7 +109,6 @@ public class AdminController {
                 tutorCentro.setDespacho(despacho);
                 tutorCentroRepository.save(tutorCentro);
                 break;
-
             case "ROLE_ADMIN":
                 Administrador admin = new Administrador();
                 admin.setUsuario(usuario);
@@ -146,12 +147,9 @@ public class AdminController {
             usuario.setNombre(nombre);
             usuario.setEmail(email);
             usuario.setRol(rol);
-
-            // Solo actualizar contraseña si se proporciona una nueva
             if (password != null && !password.isEmpty()) {
                 usuario.setPassword(passwordEncoder.encode(password));
             }
-
             usuarioRepository.save(usuario);
             redirectAttributes.addFlashAttribute("mensaje", "✅ Usuario actualizado correctamente.");
         } else {
@@ -186,5 +184,50 @@ public class AdminController {
             redirectAttributes.addFlashAttribute("error", "❌ Usuario no encontrado.");
         }
         return "redirect:/panel/admin";
+    }
+
+    // ========== GESTIÓN DE PRÁCTICAS ==========
+    @GetMapping("/practicas")
+    public String listarPracticas(Model model) {
+        List<Practica> practicas = practicaRepository.findAll();
+        model.addAttribute("practicas", practicas);
+        return "admin-practicas";
+    }
+
+    @GetMapping("/practicas/nueva")
+    public String formularioNuevaPractica(Model model) {
+        model.addAttribute("alumnos", alumnoRepository.findAll());
+        model.addAttribute("empresas", empresaRepository.findAll());
+        model.addAttribute("tutoresEmpresa", tutorEmpresaRepository.findAll());
+        model.addAttribute("tutoresCentro", tutorCentroRepository.findAll());
+        return "admin-practica-form";
+    }
+
+    @PostMapping("/practicas/guardar")
+    public String guardarPractica(@RequestParam String titulo,
+                                  @RequestParam String descripcion,
+                                  @RequestParam String fechaInicio,
+                                  @RequestParam String fechaFin,
+                                  @RequestParam int horasPrevistas,
+                                  @RequestParam Long alumnoId,
+                                  @RequestParam Long empresaId,
+                                  @RequestParam Long tutorEmpresaId,
+                                  @RequestParam Long tutorCentroId,
+                                  RedirectAttributes redirectAttributes) {
+        Practica practica = new Practica();
+        practica.setTitulo(titulo);
+        practica.setDescripcion(descripcion);
+        practica.setFechaInicio(LocalDate.parse(fechaInicio));
+        practica.setFechaFin(LocalDate.parse(fechaFin));
+        practica.setHorasPrevistas(horasPrevistas);
+        practica.setEstado(EstadoPractica.ACTIVA);
+        practica.setAlumno(alumnoRepository.findById(alumnoId).orElse(null));
+        practica.setEmpresa(empresaRepository.findById(empresaId).orElse(null));
+        practica.setTutorEmpresa(tutorEmpresaRepository.findById(tutorEmpresaId).orElse(null));
+        practica.setTutorCentro(tutorCentroRepository.findById(tutorCentroId).orElse(null));
+
+        practicaRepository.save(practica);
+        redirectAttributes.addFlashAttribute("mensaje", "✅ Práctica asignada correctamente.");
+        return "redirect:/panel/admin/practicas";
     }
 }

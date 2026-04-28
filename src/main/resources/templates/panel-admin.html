@@ -12,6 +12,7 @@
         <span class="logo">PracticApps</span>
         <div class="nav-links">
             <a th:href="@{/panel/admin}">Inicio</a>
+            <a th:href="@{/panel/admin/practicas}">Prácticas</a>
             <a th:href="@{/panel/admin/usuarios/nuevo}">+ Nuevo Usuario</a>
             <form th:action="@{/logout}" method="post" class="logout-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
