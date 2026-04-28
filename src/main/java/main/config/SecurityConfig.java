@@ -27,7 +27,7 @@ public class SecurityConfig {
         http
             .authorizeHttpRequests(auth -> auth
                 // Rutas públicas (acceso sin login)
-                .requestMatchers("/", "/index", "/login", "/css/**", "/img/**", "/js/**").permitAll()
+                .requestMatchers("/", "/index", "/login", "/css/**", "/img/**", "/js/**", "/h2-console/**").permitAll()
                 
                 // Rutas por rol - Fíjate que coinciden con tus @RequestMapping
                 .requestMatchers("/panel/admin/**").hasRole("ADMIN")
@@ -45,8 +45,15 @@ public class SecurityConfig {
             )
             .logout(logout -> logout
                 .logoutSuccessUrl("/login?logout")
-            );
+            )
+            .csrf(csrf -> csrf
+            	    .ignoringRequestMatchers("/h2-console/**")
+            	)
+            	.headers(headers -> headers
+            	    .frameOptions(frame -> frame.sameOrigin())
+            	);
 
+        
         return http.build();
     }
 }

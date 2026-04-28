@@ -13,6 +13,7 @@
         <div class="nav-links">
             <a th:href="@{/panel/tutor-empresa}">Mi Panel</a>
             <a th:href="@{/panel/tutor-empresa/validar-horas}">Validar Horas</a>
+            <a th:href="@{/panel/tutor-empresa/documentos}">Documentos</a>
             <form th:action="@{/logout}" method="post" class="logout-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit" class="btn-logout">Cerrar Sesión</button>
@@ -22,7 +23,7 @@
 
     <div class="container">
         <div class="card">
-            <h2>🏢 Panel de Tutor de Empresa</h2>
+            <h2>Panel de Tutor de Empresa</h2>
             <p>Bienvenido, <strong th:text="${tutor.nombreCompleto}">Roberto</strong></p>
             <p>Empresa: <strong th:text="${empresa.nombre}">Tech Solutions S.L.</strong></p>
             <p>Cargo: <strong th:text="${tutor.cargo}">Supervisor</strong></p>
@@ -59,7 +60,10 @@
                 </thead>
                 <tbody>
                     <tr th:each="practica : ${practicas}">
-                        <td th:text="${practica.alumno.nombreCompleto}">Carlos</td>
+                        <td>
+    <a th:href="@{/panel/tutor-empresa/evaluar/{id}(id=${practica.alumno.id})}" 
+       th:text="${practica.alumno.nombreCompleto}">Carlos</a>
+</td>
                         <td th:text="${practica.titulo}">Desarrollo Web</td>
                         <td th:text="${practica.fechaInicio}">2026-01-15</td>
                         <td th:text="${practica.fechaFin}">2026-06-15</td>

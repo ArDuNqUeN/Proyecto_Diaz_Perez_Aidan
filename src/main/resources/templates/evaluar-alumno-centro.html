@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Evaluar Alumno - PracticApps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <span class="logo">PracticApps</span>
+        <div class="nav-links">
+            <a th:href="@{/panel/tutor-centro}">Volver al Panel</a>
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn-logout">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>📝 Evaluar Alumno</h2>
+            <p>Alumno: <strong th:text="${alumno.nombreCompleto}">Carlos García</strong></p>
+            <p>Matrícula: <strong th:text="${alumno.matricula}">A2024001</strong></p>
+
+            <form method="post" th:action="@{/panel/tutor-centro/evaluar}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" name="alumnoId" th:value="${alumno.id}"/>
+
+                <div class="form-group">
+                    <label for="practica">Práctica (opcional):</label>
+                    <select id="practica" name="practicaId">
+                        <option value="">Sin práctica específica</option>
+                        <option th:each="p : ${practicas}" 
+                                th:value="${p.id}"
+                                th:text="${p.titulo} + ' - ' + ${p.empresa.nombre}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="nota">Nota (0-10):</label>
+                    <input type="number" id="nota" name="nota" min="0" max="10" step="0.1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="comentario">Comentario:</label>
+                    <textarea id="comentario" name="comentario" rows="4" 
+                              placeholder="Añade tus observaciones..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-block mt-20">
+                    <span>Guardar Evaluación</span>
+                </button>
+            </form>
+        </div>
+    </div>
+    <footer><p>&copy; 2026 PracticApps</p></footer>
+</body>
+</html>

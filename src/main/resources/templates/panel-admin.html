@@ -12,7 +12,7 @@
         <span class="logo">PracticApps</span>
         <div class="nav-links">
             <a th:href="@{/panel/admin}">Inicio</a>
-            <a th:href="@{/panel/admin/usuarios}">Usuarios</a>
+            <a th:href="@{/panel/admin/usuarios/nuevo}">+ Nuevo Usuario</a>
             <form th:action="@{/logout}" method="post" class="logout-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit" class="btn-logout">Cerrar Sesión</button>
@@ -23,13 +23,22 @@
     <div class="container">
         <div class="card">
             <h2>🔧 Panel de Administración</h2>
-            <p>Bienvenido, administrador. Desde aquí gestionas todo el sistema.</p>
+
+            <!-- Mensajes flash -->
+            <div th:if="${mensaje}" class="alerta alerta-info" th:text="${mensaje}"></div>
+            <div th:if="${error}" class="alerta alerta-error" th:text="${error}"></div>
 
             <div class="stats">
                 <div class="stat-card">
                     <h3 th:text="${totalUsuarios}">0</h3>
                     <p>Usuarios registrados</p>
                 </div>
+            </div>
+
+            <div class="botones mt-20">
+                <a th:href="@{/panel/admin/usuarios/nuevo}" class="btn">
+                    <span>+ Nuevo Usuario</span>
+                </a>
             </div>
 
             <h3>📋 Usuarios del sistema</h3>
@@ -40,18 +49,40 @@
                         <th>Nombre</th>
                         <th>Email</th>
                         <th>Rol</th>
-                        <th>Activo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="usuario : ${usuarios}">
                         <td th:text="${usuario.id}">1</td>
                         <td th:text="${usuario.nombre}">Nombre</td>
-                        <td th:text="${usuario.email}">email@test.com</td>
-                        <td th:text="${usuario.rol}">ROLE_ADMIN</td>
+                        <td th:text="${usuario.email}">email</td>
+                        <td th:text="${usuario.rol}">ROL</td>
                         <td>
                             <span th:if="${usuario.activo}" style="color: #28a745;">✅ Activo</span>
                             <span th:unless="${usuario.activo}" style="color: #dc3545;">❌ Inactivo</span>
+                        </td>
+                        <td>
+                            <!-- Editar -->
+                            <a th:href="@{/panel/admin/usuarios/editar/{id}(id=${usuario.id})}" 
+                               class="btn btn-pequeno">✏️</a>
+                            
+                            <!-- Activar/Desactivar -->
+                            <form th:action="@{/panel/admin/usuarios/toggle/{id}(id=${usuario.id})}" 
+                                  method="post" style="display: inline;">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-pequeno" 
+                                        th:text="${usuario.activo} ? '🔒' : '🔓'"></button>
+                            </form>
+                            
+                            <!-- Eliminar -->
+                            <form th:action="@{/panel/admin/usuarios/eliminar/{id}(id=${usuario.id})}" 
+                                  method="post" style="display: inline;"
+                                  onsubmit="return confirm('¿Eliminar este usuario? Esta acción no se puede deshacer.');">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-pequeno btn-rojo">🗑️</button>
+                            </form>
                         </td>
                     </tr>
                 </tbody>
@@ -61,7 +92,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 PracticApps - Todos los derechos reservados</p>
+        <p>&copy; 2026 PracticApps</p>
     </footer>
 
 </body>

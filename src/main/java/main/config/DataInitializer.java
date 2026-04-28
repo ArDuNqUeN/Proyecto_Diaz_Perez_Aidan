@@ -83,7 +83,7 @@ public class DataInitializer implements CommandLineRunner {
             alumno1.setTelefono("612345678");
             alumno1 = alumnoRepository.save(alumno1);
 
-            System.out.println("✅ Alumno creado: alumno@test.com / alumno123");
+            System.out.println("Alumno creado: alumno@test.com / alumno123");
         } else {
             alumno1 = alumnoRepository.findByUsuario(
                 usuarioRepository.findByEmail("alumno@test.com").get()
@@ -119,7 +119,7 @@ public class DataInitializer implements CommandLineRunner {
             empresa.setSector("Tecnología");
             empresa.setCif("B12345678");
             empresa = empresaRepository.save(empresa);
-            System.out.println("✅ Empresa creada: Tech Solutions S.L.");
+            System.out.println("Empresa creada: Tech Solutions S.L.");
         } else {
             empresa = empresaRepository.findByCif("B12345678").get();
         }
@@ -142,7 +142,7 @@ public class DataInitializer implements CommandLineRunner {
             tutorEmpresa.setEmpresa(empresa);
             tutorEmpresa = tutorEmpresaRepository.save(tutorEmpresa);
 
-            System.out.println("✅ Tutor Empresa creado: tutor.empresa@test.com / tutor123");
+            System.out.println("Tutor Empresa creado: tutor.empresa@test.com / tutor123");
         } else {
             tutorEmpresa = tutorEmpresaRepository.findByUsuario(
                 usuarioRepository.findByEmail("tutor.empresa@test.com").get()
@@ -166,7 +166,7 @@ public class DataInitializer implements CommandLineRunner {
             tutorCentro.setDespacho("A-204");
             tutorCentro = tutorCentroRepository.save(tutorCentro);
 
-            System.out.println("✅ Tutor Centro creado: tutor.centro@test.com / tutor123");
+            System.out.println("Tutor Centro creado: tutor.centro@test.com / tutor123");
         } else {
             tutorCentro = tutorCentroRepository.findByUsuario(
                 usuarioRepository.findByEmail("tutor.centro@test.com").get()
