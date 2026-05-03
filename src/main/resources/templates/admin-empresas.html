@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Empresas - PracticApps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <span class="logo">PracticApps</span>
+        <div class="nav-links">
+            <a th:href="@{/panel/admin}">Usuarios</a>
+            <a th:href="@{/panel/admin/practicas}">Prácticas</a>
+            <a th:href="@{/panel/admin/empresas}">Empresas</a>
+            <a th:href="@{/panel/admin/empresas/nueva}">+ Nueva</a>
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn-logout">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>🏢 Gestión de Empresas</h2>
+            <div th:if="${mensaje}" class="alerta alerta-info" th:text="${mensaje}"></div>
+            <div th:if="${error}" class="alerta alerta-error" th:text="${error}"></div>
+
+            <a th:href="@{/panel/admin/empresas/nueva}" class="btn mt-20">
+                <span>+ Nueva Empresa</span>
+            </a>
+
+            <table class="tabla" th:if="${!#lists.isEmpty(empresas)}">
+                <thead>
+                    <tr><th>Nombre</th><th>Dirección</th><th>Sector</th><th>CIF</th><th>Acciones</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="e : ${empresas}">
+                        <td th:text="${e.nombre}">Nombre</td>
+                        <td th:text="${e.direccion}">Dirección</td>
+                        <td th:text="${e.sector}">Sector</td>
+                        <td th:text="${e.cif}">CIF</td>
+                        <td>
+                            <a th:href="@{/panel/admin/empresas/editar/} + ${e.id}" class="btn btn-pequeno">✏️</a>
+                            <form th:action="@{/panel/admin/empresas/eliminar/} + ${e.id}" method="post" style="display:inline;" onsubmit="return confirm('¿Eliminar esta empresa?');">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-pequeno btn-rojo">🗑️</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="aviso" th:if="${#lists.isEmpty(empresas)}">No hay empresas registradas.</p>
+        </div>
+    </div>
+    <footer><p>&copy; 2026 PracticApps</p></footer>
+</body>
+</html>

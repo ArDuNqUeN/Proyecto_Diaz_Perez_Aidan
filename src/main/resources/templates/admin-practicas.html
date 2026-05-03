@@ -2,7 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Nueva Práctica - PracticApps</title>
+    <title>Gestión de Prácticas - PracticApps</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
@@ -10,7 +10,9 @@
     <nav class="navbar">
         <span class="logo">PracticApps</span>
         <div class="nav-links">
-            <a th:href="@{/panel/admin/practicas}">Volver</a>
+            <a th:href="@{/panel/admin}">Usuarios</a>
+            <a th:href="@{/panel/admin/practicas}">Prácticas</a>
+            <a th:href="@{/panel/admin/practicas/nueva}">+ Nueva</a>
             <form th:action="@{/logout}" method="post" class="logout-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit" class="btn-logout">Cerrar Sesión</button>
@@ -20,78 +22,53 @@
 
     <div class="container">
         <div class="card">
-            <h2>📝 Asignar Nueva Práctica</h2>
+            <h2>📋 Gestión de Prácticas</h2>
+            <div th:if="${mensaje}" class="alerta alerta-info" th:text="${mensaje}"></div>
 
-            <form method="post" th:action="@{/panel/admin/practicas/guardar}">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <a th:href="@{/panel/admin/practicas/nueva}" class="btn mt-20">
+                <span>+ Nueva Práctica</span>
+            </a>
 
-                <div class="form-group">
-                    <label for="titulo">Título de la práctica:</label>
-                    <input type="text" id="titulo" name="titulo" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="descripcion">Descripción:</label>
-                    <textarea id="descripcion" name="descripcion" rows="3" required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="fechaInicio">Fecha inicio:</label>
-                    <input type="date" id="fechaInicio" name="fechaInicio" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="fechaFin">Fecha fin:</label>
-                    <input type="date" id="fechaFin" name="fechaFin" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="horasPrevistas">Horas previstas:</label>
-                    <input type="number" id="horasPrevistas" name="horasPrevistas" min="1" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="alumno">Alumno:</label>
-                    <select id="alumno" name="alumnoId" required>
-                        <option value="">Selecciona alumno</option>
-                        <option th:each="a : ${alumnos}" th:value="${a.id}" th:text="${a.nombreCompleto}"></option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="empresa">Empresa:</label>
-                    <select id="empresa" name="empresaId" required>
-                        <option value="">Selecciona empresa</option>
-                        <option th:each="e : ${empresas}" th:value="${e.id}" th:text="${e.nombre}"></option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="tutorEmpresa">Tutor de Empresa:</label>
-                    <select id="tutorEmpresa" name="tutorEmpresaId" required>
-                        <option value="">Selecciona tutor</option>
-                        <option th:each="t : ${tutoresEmpresa}" th:value="${t.id}" th:text="${t.nombreCompleto}"></option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="tutorCentro">Tutor de Centro:</label>
-                    <select id="tutorCentro" name="tutorCentroId" required>
-                        <option value="">Selecciona tutor</option>
-                        <option th:each="t : ${tutoresCentro}" th:value="${t.id}" th:text="${t.nombreCompleto}"></option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn btn-block mt-20">
-                    <span>Guardar Práctica</span>
-                </button>
-            </form>
+            <h3>Prácticas registradas</h3>
+            <table class="tabla" th:if="${!#lists.isEmpty(practicas)}">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Alumno</th>
+                        <th>Empresa</th>
+                        <th>Horas</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="p : ${practicas}">
+                        <td th:text="${p.titulo}">Práctica</td>
+                        <td th:text="${p.alumno?.nombreCompleto} ?: 'Sin asignar'">Alumno</td>
+                        <td th:text="${p.empresa?.nombre} ?: 'Sin asignar'">Empresa</td>
+                        <td th:text="${p.horasPrevistas}">400</td>
+                        <td>
+                            <span th:if="${p.estado.toString() == 'ACTIVA'}" style="color: green;">🟢 Activa</span>
+                            <span th:if="${p.estado.toString() == 'FINALIZADA'}" style="color: gray;">⚫ Finalizada</span>
+                            <span th:if="${p.estado.toString() == 'CANCELADA'}" style="color: red;">🔴 Cancelada</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/panel/admin/practicas/editar/} + ${p.id}" class="btn btn-pequeno">✏️</a>
+                            <form th:if="${p.estado.toString() == 'ACTIVA'}" th:action="@{/panel/admin/practicas/finalizar/} + ${p.id}" method="post" style="display:inline;">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-pequeno" title="Finalizar práctica">🏁</button>
+                            </form>
+                            <form th:action="@{/panel/admin/practicas/eliminar/} + ${p.id}" method="post" style="display:inline;" onsubmit="return confirm('¿Eliminar esta práctica?');">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-pequeno btn-rojo">🗑️</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="aviso" th:if="${#lists.isEmpty(practicas)}">No hay prácticas registradas.</p>
         </div>
     </div>
-
-    <footer>
-        <p>&copy; 2026 PracticApps</p>
-    </footer>
-
+    <footer><p>&copy; 2026 PracticApps</p></footer>
 </body>
 </html>

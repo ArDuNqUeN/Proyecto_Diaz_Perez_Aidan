@@ -74,6 +74,34 @@ public class TutorEmpresaController {
         return "panel-tutor-empresa";
     }
 
+    // ========== VER DETALLE DE ALUMNO ==========
+    @GetMapping("/alumnos/{id}")
+    public String detalleAlumno(@PathVariable Long id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        Optional<Usuario> usuarioOpt = usuarioService.findByEmail(email);
+
+        if (usuarioOpt.isPresent()) {
+            Optional<Alumno> alumnoOpt = alumnoRepository.findById(id);
+            if (alumnoOpt.isPresent()) {
+                Alumno alumno = alumnoOpt.get();
+                List<RegistroHoras> horas = registroHorasRepository.findByAlumno(alumno);
+                int horasValidadas = horas.stream().filter(h -> h.getEstado() == EstadoRegistro.VALIDADA).mapToInt(RegistroHoras::getHoras).sum();
+                int horasPendientes = horas.stream().filter(h -> h.getEstado() == EstadoRegistro.PENDIENTE).mapToInt(RegistroHoras::getHoras).sum();
+                int horasRechazadas = horas.stream().filter(h -> h.getEstado() == EstadoRegistro.RECHAZADA).mapToInt(RegistroHoras::getHoras).sum();
+
+                model.addAttribute("alumno", alumno);
+                model.addAttribute("horas", horas);
+                model.addAttribute("horasValidadas", horasValidadas);
+                model.addAttribute("horasPendientes", horasPendientes);
+                model.addAttribute("horasRechazadas", horasRechazadas);
+                model.addAttribute("practicas", alumno.getPracticas());
+                model.addAttribute("evaluacionesAlumno", alumno.getEvaluaciones());
+            }
+        }
+        return "tutor-empresa-alumno-detalle";
+    }
+
     // ========== VALIDAR HORAS ==========
     @GetMapping("/validar-horas")
     public String listarHorasPendientes(Model model) {
@@ -109,12 +137,9 @@ public class TutorEmpresaController {
     public String validarHoras(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<RegistroHoras> registroOpt = registroHorasRepository.findById(id);
         if (registroOpt.isPresent()) {
-            RegistroHoras registro = registroOpt.get();
-            registro.setEstado(EstadoRegistro.VALIDADA);
-            registroHorasRepository.save(registro);
-            redirectAttributes.addFlashAttribute("mensaje", "✅ Horas validadas correctamente.");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "❌ Registro no encontrado.");
+            registroOpt.get().setEstado(EstadoRegistro.VALIDADA);
+            registroHorasRepository.save(registroOpt.get());
+            redirectAttributes.addFlashAttribute("mensaje", "Horas validadas correctamente.");
         }
         return "redirect:/panel/tutor-empresa/validar-horas";
     }
@@ -123,12 +148,9 @@ public class TutorEmpresaController {
     public String rechazarHoras(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         Optional<RegistroHoras> registroOpt = registroHorasRepository.findById(id);
         if (registroOpt.isPresent()) {
-            RegistroHoras registro = registroOpt.get();
-            registro.setEstado(EstadoRegistro.RECHAZADA);
-            registroHorasRepository.save(registro);
-            redirectAttributes.addFlashAttribute("mensaje", "⚠️ Horas rechazadas.");
-        } else {
-            redirectAttributes.addFlashAttribute("error", "❌ Registro no encontrado.");
+            registroOpt.get().setEstado(EstadoRegistro.RECHAZADA);
+            registroHorasRepository.save(registroOpt.get());
+            redirectAttributes.addFlashAttribute("mensaje", "Horas rechazadas.");
         }
         return "redirect:/panel/tutor-empresa/validar-horas";
     }
@@ -178,11 +200,11 @@ public class TutorEmpresaController {
                     practicaRepository.findById(practicaId).ifPresent(evaluacion::setPractica);
                 }
                 evaluacionRepository.save(evaluacion);
-                redirectAttributes.addFlashAttribute("mensaje", "✅ Evaluación guardada correctamente.");
+                redirectAttributes.addFlashAttribute("mensaje", "Evaluación guardada correctamente.");
                 return "redirect:/panel/tutor-empresa";
             }
         }
-        redirectAttributes.addFlashAttribute("error", "❌ Error al guardar la evaluación.");
+        redirectAttributes.addFlashAttribute("error", "Error al guardar la evaluación.");
         return "redirect:/panel/tutor-empresa";
     }
 
@@ -224,10 +246,10 @@ public class TutorEmpresaController {
                         alumno = alumnoRepository.findById(alumnoId).orElse(null);
                     }
                     documentoService.guardarArchivoTutorEmpresa(archivo, tutorOpt.get(), tipoDocumento, alumno);
-                    redirectAttributes.addFlashAttribute("mensaje", "✅ Documento subido correctamente.");
+                    redirectAttributes.addFlashAttribute("mensaje", "Documento subido correctamente.");
                     return "redirect:/panel/tutor-empresa/documentos";
                 } catch (IOException e) {
-                    redirectAttributes.addFlashAttribute("error", "❌ Error al subir el archivo.");
+                    redirectAttributes.addFlashAttribute("error", "Error al subir el archivo.");
                 }
             }
         }

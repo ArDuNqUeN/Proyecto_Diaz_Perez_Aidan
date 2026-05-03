@@ -12,7 +12,8 @@
         <div class="nav-links">
             <a th:href="@{/panel/tutor-centro}">Mi Panel</a>
             <a th:href="@{/panel/tutor-centro/documentos}">Documentos</a>
-            <form th:action="@{/logout}" method="post" class="logout-form">
+			<a th:href="@{/panel/tutor-centro/alumnos}">Alumnos</a>
+			<form th:action="@{/logout}" method="post" class="logout-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit" class="btn-logout">Cerrar Sesión</button>
             </form>

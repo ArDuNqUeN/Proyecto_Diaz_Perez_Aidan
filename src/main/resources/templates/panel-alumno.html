@@ -7,14 +7,13 @@
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body>
-
     <nav class="navbar">
         <span class="logo">PracticApps</span>
         <div class="nav-links">
             <a th:href="@{/panel/alumno}">Mi Panel</a>
             <a th:href="@{/panel/alumno/registrar-horas}">Registrar Horas</a>
-            <a th:href="@{/panel/alumno/evaluaciones}">Evaluaciones</a>
             <a th:href="@{/panel/alumno/documentos}">Documentos</a>
+            <a th:href="@{/panel/alumno/evaluaciones}">Evaluaciones</a>
             <form th:action="@{/logout}" method="post" class="logout-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit" class="btn-logout">Cerrar Sesión</button>
@@ -25,68 +24,48 @@
     <div class="container">
         <div class="card">
             <h2>👨‍🎓 Mi Panel</h2>
-            <p>Bienvenido, <strong th:text="${alumno.nombreCompleto}">Carlos García</strong></p>
+            <div th:if="${mensaje}" class="alerta alerta-info" th:text="${mensaje}"></div>
+            <p>Bienvenido, <strong th:text="${alumno.nombreCompleto}">Carlos</strong></p>
             <p>Matrícula: <strong th:text="${alumno.matricula}">A2024001</strong></p>
 
             <h3>📋 Mis Prácticas</h3>
-            <table class="tabla" th:if="${!#lists.isEmpty(practicas)}">
-                <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Empresa</th>
-                        <th>Inicio</th>
-                        <th>Fin</th>
-                        <th>Horas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="practica : ${practicas}">
-                        <td th:text="${practica.titulo}">Desarrollo Web</td>
-                        <td th:text="${practica.empresa.nombre}">Tech Solutions</td>
-                        <td th:text="${practica.fechaInicio}">2026-01-01</td>
-                        <td th:text="${practica.fechaFin}">2026-03-31</td>
-                        <td th:text="${practica.horasPrevistas}">400</td>
-                    </tr>
-                </tbody>
-            </table>
-            <p class="aviso" th:if="${#lists.isEmpty(practicas)}">No tienes prácticas asignadas todavía.</p>
+            <div th:each="practica : ${practicas}">
+                <div class="card" style="margin-bottom: 15px; border: 1px solid #ddd;">
+                    <h4 th:text="${practica.titulo}">Desarrollo Web</h4>
+                    <p th:text="${practica.descripcion}">Descripción</p>
+                    <p>Empresa: <strong th:text="${practica.empresa?.nombre} ?: 'No asignada'">Tech</strong></p>
+                    <p>Período: <span th:text="${practica.fechaInicio}"></span> a <span th:text="${practica.fechaFin}"></span></p>
+                    <p>Horas previstas: <strong th:text="${practica.horasPrevistas}">400</strong></p>
+                    <p>Estado: <strong th:text="${practica.estado}">ACTIVA</strong></p>
+                </div>
+            </div>
+            <p class="aviso" th:if="${#lists.isEmpty(practicas)}">No tienes prácticas asignadas.</p>
 
             <h3>⏱️ Mis últimas horas registradas</h3>
             <table class="tabla" th:if="${!#lists.isEmpty(registrosHoras)}">
                 <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Horas</th>
-                        <th>Descripción</th>
-                        <th>Estado</th>
-                    </tr>
+                    <tr><th>Fecha</th><th>Horas</th><th>Descripción</th><th>Estado</th></tr>
                 </thead>
                 <tbody>
-                    <tr th:each="registro : ${registrosHoras}">
-                        <td th:text="${registro.fecha}">2026-01-15</td>
-                        <td th:text="${registro.horas}">8</td>
-                        <td th:text="${registro.descripcion}">Tareas</td>
+                    <tr th:each="r : ${registrosHoras}">
+                        <td th:text="${r.fecha}">2026-04-20</td>
+                        <td th:text="${r.horas}">8</td>
+                        <td th:text="${r.descripcion}">Tareas</td>
                         <td>
-                            <span th:if="${registro.estado.toString() == 'PENDIENTE'}" style="color: #ffc107;">⏳ Pendiente</span>
-                            <span th:if="${registro.estado.toString() == 'VALIDADA'}" style="color: #28a745;">✅ Validada</span>
-                            <span th:if="${registro.estado.toString() == 'RECHAZADA'}" style="color: #dc3545;">❌ Rechazada</span>
+                            <span th:if="${r.estado.toString() == 'VALIDADA'}" style="color: green;">✅</span>
+                            <span th:if="${r.estado.toString() == 'PENDIENTE'}" style="color: orange;">⏳</span>
+                            <span th:if="${r.estado.toString() == 'RECHAZADA'}" style="color: red;">❌</span>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <p class="aviso" th:if="${#lists.isEmpty(registrosHoras)}">Aún no has registrado horas.</p>
+            <p class="aviso" th:if="${#lists.isEmpty(registrosHoras)}">No has registrado horas.</p>
 
-            <div class="botones mt-20">
-                <a th:href="@{/panel/alumno/registrar-horas}" class="btn">
-                    <span>Registrar Horas</span>
-                </a>
-            </div>
+            <a th:href="@{/panel/alumno/registrar-horas}" class="btn mt-20">
+                <span>Registrar Horas</span>
+            </a>
         </div>
     </div>
-
-    <footer>
-        <p>&copy; 2026 PracticApps - Todos los derechos reservados</p>
-    </footer>
-
+    <footer><p>&copy; 2026 PracticApps</p></footer>
 </body>
 </html>

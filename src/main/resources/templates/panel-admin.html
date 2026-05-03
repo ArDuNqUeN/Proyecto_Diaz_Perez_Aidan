@@ -2,18 +2,17 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Admin - PracticApps</title>
+    <title>Gestión de Prácticas - PracticApps</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body>
-
     <nav class="navbar">
         <span class="logo">PracticApps</span>
         <div class="nav-links">
-            <a th:href="@{/panel/admin}">Inicio</a>
+            <a th:href="@{/panel/admin}">Usuarios</a>
             <a th:href="@{/panel/admin/practicas}">Prácticas</a>
-            <a th:href="@{/panel/admin/usuarios/nuevo}">+ Nuevo Usuario</a>
+            <a th:href="@{/panel/admin/practicas/nueva}">+ Nueva</a>
             <form th:action="@{/logout}" method="post" class="logout-form">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <button type="submit" class="btn-logout">Cerrar Sesión</button>
@@ -23,64 +22,50 @@
 
     <div class="container">
         <div class="card">
-            <h2>🔧 Panel de Administración</h2>
-
-            <!-- Mensajes flash -->
+            <h2>📋 Gestión de Prácticas</h2>
             <div th:if="${mensaje}" class="alerta alerta-info" th:text="${mensaje}"></div>
-            <div th:if="${error}" class="alerta alerta-error" th:text="${error}"></div>
 
-            <div class="stats">
-                <div class="stat-card">
-                    <h3 th:text="${totalUsuarios}">0</h3>
-                    <p>Usuarios registrados</p>
-                </div>
-            </div>
+            <a th:href="@{/panel/admin/practicas/nueva}" class="btn mt-20">
+                <span>+ Nueva Práctica</span>
+            </a>
 
-            <div class="botones mt-20">
-                <a th:href="@{/panel/admin/usuarios/nuevo}" class="btn">
-                    <span>+ Nuevo Usuario</span>
-                </a>
-            </div>
-
-            <h3>📋 Usuarios del sistema</h3>
-            <table class="tabla" th:if="${!#lists.isEmpty(usuarios)}">
+            <h3>Prácticas registradas</h3>
+            <table class="tabla" th:if="${!#lists.isEmpty(practicas)}">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Rol</th>
+                        <th>Título</th>
+                        <th>Alumno</th>
+                        <th>Empresa</th>
+                        <th>Horas</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="usuario : ${usuarios}">
-                        <td th:text="${usuario.id}">1</td>
-                        <td th:text="${usuario.nombre}">Nombre</td>
-                        <td th:text="${usuario.email}">email</td>
-                        <td th:text="${usuario.rol}">ROL</td>
+                    <tr th:each="p : ${practicas}">
+                        <td th:text="${p.titulo}">Práctica</td>
+                        <td th:text="${p.alumno?.nombreCompleto} ?: 'Sin asignar'">Alumno</td>
+                        <td th:text="${p.empresa?.nombre} ?: 'Sin asignar'">Empresa</td>
+                        <td th:text="${p.horasPrevistas}">400</td>
                         <td>
-                            <span th:if="${usuario.activo}" style="color: #28a745;">✅ Activo</span>
-                            <span th:unless="${usuario.activo}" style="color: #dc3545;">❌ Inactivo</span>
+                            <span th:if="${p.estado.toString() == 'ACTIVA'}" style="color: green;">🟢 Activa</span>
+                            <span th:if="${p.estado.toString() == 'FINALIZADA'}" style="color: gray;">⚫ Finalizada</span>
+                            <span th:if="${p.estado.toString() == 'CANCELADA'}" style="color: red;">🔴 Cancelada</span>
                         </td>
                         <td>
-                            <!-- Editar -->
-                            <a th:href="@{/panel/admin/usuarios/editar/{id}(id=${usuario.id})}" 
-                               class="btn btn-pequeno">✏️</a>
-                            
-                            <!-- Activar/Desactivar -->
-                            <form th:action="@{/panel/admin/usuarios/toggle/{id}(id=${usuario.id})}" 
-                                  method="post" style="display: inline;">
+                            <a th:href="@{/panel/admin/practicas/editar/} + ${p.id}" class="btn btn-pequeno">✏️</a>
+                            <form th:if="${p.estado.toString() == 'ACTIVA'}" th:action="@{/panel/admin/practicas/finalizar/} + ${p.id}" method="post" style="display:inline;">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                                <button type="submit" class="btn btn-pequeno" 
-                                        th:text="${usuario.activo} ? '🔒' : '🔓'"></button>
+                                <button type="submit" class="btn btn-pequeno" title="Finalizar práctica">🏁</button>
                             </form>
-                            
-                            <!-- Eliminar -->
-                            <form th:action="@{/panel/admin/usuarios/eliminar/{id}(id=${usuario.id})}" 
-                                  method="post" style="display: inline;"
-                                  onsubmit="return confirm('¿Eliminar este usuario? Esta acción no se puede deshacer.');">
+                            <form th:if="${p.estado.toString() != 'FINALIZADA' and p.estado.toString() != 'CANCELADA'}" 
+                                  th:action="@{/panel/admin/practicas/cancelar/} + ${p.id}" method="post" style="display:inline;"
+                                  onsubmit="return confirm('¿Cancelar esta práctica?');">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                <button type="submit" class="btn btn-pequeno btn-rojo" title="Cancelar práctica">❌</button>
+                            </form>
+                            <form th:action="@{/panel/admin/practicas/eliminar/} + ${p.id}" method="post" style="display:inline;" 
+                                  onsubmit="return confirm('¿Eliminar esta práctica?');">
                                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                                 <button type="submit" class="btn btn-pequeno btn-rojo">🗑️</button>
                             </form>
@@ -88,13 +73,9 @@
                     </tr>
                 </tbody>
             </table>
-            <p class="aviso" th:if="${#lists.isEmpty(usuarios)}">No hay usuarios registrados.</p>
+            <p class="aviso" th:if="${#lists.isEmpty(practicas)}">No hay prácticas registradas.</p>
         </div>
     </div>
-
-    <footer>
-        <p>&copy; 2026 PracticApps</p>
-    </footer>
-
+    <footer><p>&copy; 2026 PracticApps</p></footer>
 </body>
 </html>

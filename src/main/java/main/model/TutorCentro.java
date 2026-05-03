@@ -19,6 +19,9 @@ public class TutorCentro {
     private String departamento;
     private String despacho;
 
+    @OneToMany(mappedBy = "tutorCentro")
+    private List<Practica> practicas = new ArrayList<>();
+
     @OneToMany(mappedBy = "tutorCentro", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Evaluacion> evaluacionesRealizadas = new ArrayList<>();
 
@@ -33,7 +36,6 @@ public class TutorCentro {
         this.despacho = despacho;
     }
 
-    // Métodos helper
     public void addEvaluacion(Evaluacion evaluacion) {
         evaluacionesRealizadas.add(evaluacion);
         evaluacion.setTutorCentro(this);
@@ -42,6 +44,11 @@ public class TutorCentro {
     public void addInforme(Informe informe) {
         informesGenerados.add(informe);
         informe.setTutorCentro(this);
+    }
+
+    public void addPractica(Practica practica) {
+        practicas.add(practica);
+        practica.setTutorCentro(this);
     }
 
     // Getters y Setters
@@ -56,6 +63,9 @@ public class TutorCentro {
 
     public String getDespacho() { return despacho; }
     public void setDespacho(String despacho) { this.despacho = despacho; }
+
+    public List<Practica> getPracticas() { return practicas; }
+    public void setPracticas(List<Practica> practicas) { this.practicas = practicas; }
 
     public List<Evaluacion> getEvaluacionesRealizadas() { return evaluacionesRealizadas; }
     public void setEvaluacionesRealizadas(List<Evaluacion> evaluacionesRealizadas) { this.evaluacionesRealizadas = evaluacionesRealizadas; }

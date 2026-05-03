@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Evaluaciones - PracticApps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <span class="logo">PracticApps</span>
+        <div class="nav-links">
+            <a th:href="@{/panel/admin}">Usuarios</a>
+            <a th:href="@{/panel/admin/practicas}">Prácticas</a>
+            <a th:href="@{/panel/admin/empresas}">Empresas</a>
+            <a th:href="@{/panel/admin/evaluaciones}">Evaluaciones</a>
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn-logout">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>📊 Todas las Evaluaciones</h2>
+
+            <table class="tabla" th:if="${!#lists.isEmpty(evaluaciones)}">
+                <thead>
+                    <tr>
+                        <th>Alumno</th>
+                        <th>Evaluador</th>
+                        <th>Tipo</th>
+                        <th>Nota</th>
+                        <th>Comentario</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="e : ${evaluaciones}">
+                        <td th:text="${e.alumno?.nombreCompleto} ?: 'Sin alumno'">Carlos</td>
+                        <td th:text="${e.nombreEvaluador} ?: 'Desconocido'">Roberto</td>
+                        <td th:text="${e.tipoEvaluador}">TUTOR_EMPRESA</td>
+                        <td th:text="${e.nota}">8.5</td>
+                        <td th:text="${e.comentario} ?: '-'">Buen trabajo</td>
+                        <td th:text="${#temporals.format(e.fechaEvaluacion, 'dd/MM/yyyy')}">01/01/2026</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="aviso" th:if="${#lists.isEmpty(evaluaciones)}">No hay evaluaciones registradas.</p>
+        </div>
+    </div>
+    <footer><p>&copy; 2026 PracticApps</p></footer>
+</body>
+</html>

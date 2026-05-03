@@ -28,7 +28,6 @@
             <p>Empresa: <strong th:text="${empresa.nombre}">Tech Solutions S.L.</strong></p>
             <p>Cargo: <strong th:text="${tutor.cargo}">Supervisor</strong></p>
 
-            <!-- Estadísticas rápidas -->
             <div class="stats">
                 <div class="stat-card">
                     <h3 th:text="${#lists.size(practicas)}">0</h3>
@@ -40,7 +39,6 @@
                 </div>
             </div>
 
-            <!-- Botón para validar horas -->
             <div class="botones mt-20">
                 <a th:href="@{/panel/tutor-empresa/validar-horas}" class="btn">
                     <span>⏱️ Validar Horas Pendientes</span>
@@ -55,23 +53,33 @@
                         <th>Título</th>
                         <th>Inicio</th>
                         <th>Fin</th>
-                        <th>Horas Previstas</th>
+                        <th>Horas</th>
+                        <th>Acción</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr th:each="practica : ${practicas}">
                         <td>
-    <a th:href="@{/panel/tutor-empresa/evaluar/{id}(id=${practica.alumno.id})}" 
-       th:text="${practica.alumno.nombreCompleto}">Carlos</a>
-</td>
+                            <span th:if="${practica.alumno != null}">
+                                <a th:href="@{/panel/tutor-empresa/alumnos/} + ${practica.alumno.id}" 
+                                   th:text="${practica.alumno.nombreCompleto}">Carlos</a>
+                            </span>
+                            <span th:unless="${practica.alumno != null}" style="color: gray;">Sin alumno</span>
+                        </td>
                         <td th:text="${practica.titulo}">Desarrollo Web</td>
                         <td th:text="${practica.fechaInicio}">2026-01-15</td>
                         <td th:text="${practica.fechaFin}">2026-06-15</td>
                         <td th:text="${practica.horasPrevistas}">400</td>
+                        <td>
+                            <span th:if="${practica.alumno != null}">
+                                <a th:href="@{/panel/tutor-empresa/evaluar/} + ${practica.alumno.id}" 
+                                   class="btn btn-pequeno">📝 Evaluar</a>
+                            </span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
-            <p class="aviso" th:if="${#lists.isEmpty(practicas)}">No tienes prácticas asignadas actualmente.</p>
+            <p class="aviso" th:if="${#lists.isEmpty(practicas)}">No tienes prácticas asignadas.</p>
 
             <h3>📝 Evaluaciones realizadas</h3>
             <table class="tabla" th:if="${!#lists.isEmpty(evaluaciones)}">
@@ -85,7 +93,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="eval : ${evaluaciones}">
-                        <td th:text="${eval.alumno.nombreCompleto}">Carlos García</td>
+                        <td th:text="${eval.alumno?.nombreCompleto} ?: 'Sin alumno'">Carlos</td>
                         <td th:text="${eval.nota}">8.5</td>
                         <td th:text="${eval.comentario}">Buen trabajo</td>
                         <td th:text="${#temporals.format(eval.fechaEvaluacion, 'dd/MM/yyyy')}">15/03/2026</td>
@@ -97,7 +105,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 PracticApps - Todos los derechos reservados</p>
+        <p>&copy; 2026 PracticApps</p>
     </footer>
 
 </body>

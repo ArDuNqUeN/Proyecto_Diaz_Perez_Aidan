@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Alumnos - PracticApps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <span class="logo">PracticApps</span>
+        <div class="nav-links">
+            <a th:href="@{/panel/tutor-centro}">Mi Panel</a>
+            <a th:href="@{/panel/tutor-centro/alumnos}">Alumnos</a>
+            <a th:href="@{/panel/tutor-centro/documentos}">Documentos</a>
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn-logout">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>👨‍🎓 Mis Alumnos</h2>
+
+            <table class="tabla" th:if="${!#lists.isEmpty(alumnos)}">
+                <thead>
+                    <tr><th>Nombre</th><th>Matrícula</th><th>Teléfono</th><th>Acción</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="a : ${alumnos}">
+                        <td th:text="${a.nombreCompleto}">Carlos</td>
+                        <td th:text="${a.matricula}">A2024001</td>
+                        <td th:text="${a.telefono}">612345678</td>
+                        <td>
+                            <a th:href="@{/panel/tutor-centro/alumnos/} + ${a.id}" class="btn btn-pequeno">📋 Ver</a>
+                            <a th:href="@{/panel/tutor-centro/evaluar/} + ${a.id}" class="btn btn-pequeno">📝 Evaluar</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="aviso" th:if="${#lists.isEmpty(alumnos)}">No tienes alumnos asignados.</p>
+        </div>
+    </div>
+    <footer><p>&copy; 2026 PracticApps</p></footer>
+</body>
+</html>

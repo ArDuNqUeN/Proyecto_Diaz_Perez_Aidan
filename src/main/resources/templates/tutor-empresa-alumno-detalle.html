@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle Alumno - PracticApps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/css/estilos.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <span class="logo">PracticApps</span>
+        <div class="nav-links">
+            <a th:href="@{/panel/tutor-empresa}">Volver</a>
+            <form th:action="@{/logout}" method="post" class="logout-form">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn-logout">Cerrar Sesión</button>
+            </form>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>👨‍🎓 <span th:text="${alumno.nombreCompleto}">Carlos</span></h2>
+            <p>Matrícula: <strong th:text="${alumno.matricula}">A2024001</strong></p>
+            <p>Teléfono: <strong th:text="${alumno.telefono}">612345678</strong></p>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <h3 th:text="${horasValidadas}">0</h3>
+                    <p>Horas validadas</p>
+                </div>
+                <div class="stat-card">
+                    <h3 th:text="${horasPendientes}">0</h3>
+                    <p>Pendientes</p>
+                </div>
+                <div class="stat-card">
+                    <h3 th:text="${horasRechazadas}">0</h3>
+                    <p>Rechazadas</p>
+                </div>
+            </div>
+
+            <h3>📋 Registros de horas</h3>
+            <table class="tabla" th:if="${!#lists.isEmpty(horas)}">
+                <thead>
+                    <tr><th>Fecha</th><th>Horas</th><th>Descripción</th><th>Estado</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="h : ${horas}">
+                        <td th:text="${h.fecha}">2026-04-20</td>
+                        <td th:text="${h.horas}">8</td>
+                        <td th:text="${h.descripcion}">Tareas</td>
+                        <td>
+                            <span th:if="${h.estado.toString() == 'VALIDADA'}" style="color: green;">✅</span>
+                            <span th:if="${h.estado.toString() == 'PENDIENTE'}" style="color: orange;">⏳</span>
+                            <span th:if="${h.estado.toString() == 'RECHAZADA'}" style="color: red;">❌</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="aviso" th:if="${#lists.isEmpty(horas)}">No hay registros de horas.</p>
+
+            <h3>📝 Evaluaciones del alumno</h3>
+            <table class="tabla" th:if="${!#lists.isEmpty(evaluacionesAlumno)}">
+                <thead>
+                    <tr><th>Evaluador</th><th>Nota</th><th>Comentario</th><th>Fecha</th></tr>
+                </thead>
+                <tbody>
+                    <tr th:each="e : ${evaluacionesAlumno}">
+                        <td th:text="${e.nombreEvaluador}">Roberto</td>
+                        <td th:text="${e.nota}">8.5</td>
+                        <td th:text="${e.comentario}">Buen trabajo</td>
+                        <td th:text="${#temporals.format(e.fechaEvaluacion, 'dd/MM/yyyy')}">01/01/2026</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="aviso" th:if="${#lists.isEmpty(evaluacionesAlumno)}">No hay evaluaciones.</p>
+        </div>
+    </div>
+    <footer><p>&copy; 2026 PracticApps</p></footer>
+</body>
+</html>
