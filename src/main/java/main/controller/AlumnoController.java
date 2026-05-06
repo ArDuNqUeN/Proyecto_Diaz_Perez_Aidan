@@ -63,6 +63,18 @@ public class AlumnoController {
 
             if (alumnoOpt.isPresent()) {
                 Alumno alumno = alumnoOpt.get();
+                
+                // Calcular horas validadas por cada práctica
+                for (Practica p : alumno.getPracticas()) {
+                    int validadas = 0;
+                    for (RegistroHoras rh : p.getRegistrosHoras()) {
+                        if (rh.getEstado() == EstadoRegistro.VALIDADA) {
+                            validadas += rh.getHoras();
+                        }
+                    }
+                    p.setHorasValidadas(validadas);
+                }
+                
                 model.addAttribute("alumno", alumno);
                 model.addAttribute("practicas", alumno.getPracticas());
                 model.addAttribute("registrosHoras", alumno.getRegistrosHoras());

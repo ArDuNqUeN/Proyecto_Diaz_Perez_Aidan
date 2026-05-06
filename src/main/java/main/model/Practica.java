@@ -1,22 +1,9 @@
 package main.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "practicas")
@@ -37,9 +24,11 @@ public class Practica {
     private int horasPrevistas;
 
     @Enumerated(EnumType.STRING)
-    private EstadoPractica estado; // ACTIVA, FINALIZADA, CANCELADA
+    private EstadoPractica estado;
 
-    // Relaciones CORRECTAS
+    @Transient
+    private int horasValidadas;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "alumno_id")
     private Alumno alumno;
@@ -65,27 +54,8 @@ public class Practica {
     @OneToMany(mappedBy = "practica", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RegistroHoras> registrosHoras = new ArrayList<>();
 
-    public Practica() {
-        this.estado = EstadoPractica.ACTIVA;
-    }
+    public Practica() { this.estado = EstadoPractica.ACTIVA; }
 
-    // Métodos helper
-    public void addEvaluacion(Evaluacion evaluacion) {
-        evaluaciones.add(evaluacion);
-        evaluacion.setPractica(this);
-    }
-
-    public void addInforme(Informe informe) {
-        informes.add(informe);
-        informe.setPractica(this);
-    }
-
-    public void addRegistroHoras(RegistroHoras registro) {
-        registrosHoras.add(registro);
-        registro.setPractica(this);
-    }
-
-    // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -106,6 +76,9 @@ public class Practica {
 
     public EstadoPractica getEstado() { return estado; }
     public void setEstado(EstadoPractica estado) { this.estado = estado; }
+
+    public int getHorasValidadas() { return horasValidadas; }
+    public void setHorasValidadas(int horasValidadas) { this.horasValidadas = horasValidadas; }
 
     public Alumno getAlumno() { return alumno; }
     public void setAlumno(Alumno alumno) { this.alumno = alumno; }

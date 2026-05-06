@@ -7,12 +7,13 @@
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body>
-   <nav class="navbar">
-    <a th:href="@{/panel}" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
-        <img src="/img/logo.png" alt="Logo" style="height: 35px;">
-        <span class="logo">PracticApps</span>
-    </a>
-    <div class="nav-links">
+
+    <nav class="navbar">
+        <a th:href="@{/panel/alumno}" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
+            <img src="/img/logo.png" alt="Logo" style="height: 35px;">
+            <span class="logo">PracticApps</span>
+        </a>
+        <div class="nav-links">
             <a th:href="@{/panel/alumno}">Mi Panel</a>
             <a th:href="@{/panel/alumno/registrar-horas}">Registrar Horas</a>
             <a th:href="@{/panel/alumno/documentos}">Documentos</a>
@@ -32,16 +33,32 @@
             <p>Matrícula: <strong th:text="${alumno.matricula}">A2024001</strong></p>
 
             <h3>📋 Mis Prácticas</h3>
-            <div th:each="practica : ${practicas}">
-                <div class="card" style="margin-bottom: 15px; border: 1px solid #ddd;">
-                    <h4 th:text="${practica.titulo}">Desarrollo Web</h4>
-                    <p th:text="${practica.descripcion}">Descripción</p>
-                    <p>Empresa: <strong th:text="${practica.empresa?.nombre} ?: 'No asignada'">Tech</strong></p>
-                    <p>Período: <span th:text="${practica.fechaInicio}"></span> a <span th:text="${practica.fechaFin}"></span></p>
-                    <p>Horas previstas: <strong th:text="${practica.horasPrevistas}">400</strong></p>
-                    <p>Estado: <strong th:text="${practica.estado}">ACTIVA</strong></p>
+            
+            <div th:each="practica : ${practicas}" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+                <h4 th:text="${practica.titulo}">Desarrollo Web</h4>
+                <p th:text="${practica.descripcion}">Descripción</p>
+                <p>Empresa: <strong th:text="${practica.empresa?.nombre} ?: 'No asignada'">Tech</strong></p>
+                <p>Período: <span th:text="${practica.fechaInicio}"></span> a <span th:text="${practica.fechaFin}"></span></p>
+                <p>Estado: <strong th:text="${practica.estado}">ACTIVA</strong></p>
+
+                <div th:with="porcentaje=${practica.horasPrevistas > 0 ? (practica.horasValidadas * 100 / practica.horasPrevistas) : 0}">
+                    <div style="display: flex; justify-content: space-between; margin: 8px 0 4px 0;">
+                        <span th:text="${practica.horasValidadas} + ' / ' + ${practica.horasPrevistas} + ' horas validadas'">0 / 400 horas</span>
+                        <span th:text="${porcentaje} + '%'">0%</span>
+                    </div>
+                    <div style="width:100%; background:#e0e0e0; border-radius:10px; height:20px;">
+                        <div th:style="'width:' + ${porcentaje} + '%;' +
+                             'background:' + (${porcentaje} > 80 ? '#28a745' : (${porcentaje} > 40 ? '#0a66c2' : '#ffc107')) + ';' +
+                             'height:100%; border-radius:10px; transition: width 0.5s;'"></div>
+                    </div>
+                    <p style="margin-top: 5px; font-size: 14px;">
+                        <span th:if="${porcentaje >= 100}">✅ ¡Horas completadas!</span>
+                        <span th:if="${porcentaje < 100 and porcentaje > 0}">⏳ En progreso...</span>
+                        <span th:if="${porcentaje == 0}">🆕 Sin horas registradas todavía</span>
+                    </p>
                 </div>
             </div>
+
             <p class="aviso" th:if="${#lists.isEmpty(practicas)}">No tienes prácticas asignadas.</p>
 
             <h3>⏱️ Mis últimas horas registradas</h3>
@@ -55,9 +72,9 @@
                         <td th:text="${r.horas}">8</td>
                         <td th:text="${r.descripcion}">Tareas</td>
                         <td>
-                            <span th:if="${r.estado.toString() == 'VALIDADA'}" style="color: green;">✅</span>
-                            <span th:if="${r.estado.toString() == 'PENDIENTE'}" style="color: orange;">⏳</span>
-                            <span th:if="${r.estado.toString() == 'RECHAZADA'}" style="color: red;">❌</span>
+                            <span th:if="${r.estado.toString() == 'VALIDADA'}" style="color: green;">✅ Validada</span>
+                            <span th:if="${r.estado.toString() == 'PENDIENTE'}" style="color: orange;">⏳ Pendiente</span>
+                            <span th:if="${r.estado.toString() == 'RECHAZADA'}" style="color: red;">❌ Rechazada</span>
                         </td>
                     </tr>
                 </tbody>
