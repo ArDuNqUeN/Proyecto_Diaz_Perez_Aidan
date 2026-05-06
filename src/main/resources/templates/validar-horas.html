@@ -9,8 +9,11 @@
 <body>
 
     <nav class="navbar">
+    <a th:href="@{/panel}" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
+        <img src="/img/logo.png" alt="Logo" style="height: 35px;">
         <span class="logo">PracticApps</span>
-        <div class="nav-links">
+    </a>
+    <div class="nav-links">
             <a th:href="@{/panel/tutor-empresa}">Mi Panel</a>
             <a th:href="@{/panel/tutor-empresa/validar-horas}">Validar Horas</a>
             <form th:action="@{/logout}" method="post" class="logout-form">

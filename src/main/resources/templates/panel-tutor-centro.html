@@ -7,9 +7,12 @@
     <link rel="stylesheet" th:href="@{/css/estilos.css}">
 </head>
 <body>
-    <nav class="navbar">
+   <nav class="navbar">
+    <a th:href="@{/panel}" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
+        <img src="/img/logo.png" alt="Logo" style="height: 35px;">
         <span class="logo">PracticApps</span>
-        <div class="nav-links">
+    </a>
+    <div class="nav-links">
             <a th:href="@{/panel/tutor-centro}">Mi Panel</a>
             <a th:href="@{/panel/tutor-centro/documentos}">Documentos</a>
 			<a th:href="@{/panel/tutor-centro/alumnos}">Alumnos</a>
