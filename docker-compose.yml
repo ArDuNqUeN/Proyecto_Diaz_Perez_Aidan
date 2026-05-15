@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: proyecto_spring_h2
+    restart: always
+    ports:
+      - "8090:8090"
